@@ -22,7 +22,7 @@ Basic run functionality::
     >>> c.return_code
     0
 
-Basic chain functionality:
+Basic chain functionality::
 
    >>> c = delegator.chain('fortune | cowsay')
    >>> print c.out
@@ -39,13 +39,13 @@ Basic chain functionality:
                     ||     ||
 
 
-Expect functionality is built-in too:
+Expect functionality is built-in too::
 
     >>> c.expect('Password:')
     >>> c.send('PASSWORD')
     >>> c.block()
 
-Other functions:
+Other functions::
 
     >>> c.kill()
     >>> c.err
