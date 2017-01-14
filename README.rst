@@ -48,5 +48,6 @@ Expect functionality is built-in too::
 Other functions::
 
     >>> c.kill()
+    >>> c.send('SIGTERM', signal=True)
     >>> c.err
     # only available when block=True, otherwise, use c.out

@@ -17,7 +17,6 @@ class Command(object):
 
     @property
     def _popen_args(self):
-        # return shlex.split(self.cmd)
         return self.cmd
 
     @property
@@ -28,7 +27,7 @@ class Command(object):
             'stdout': subprocess.PIPE,
             'stderr': subprocess.PIPE,
             'universal_newlines': True,
-            # 'bufsize': 0,
+            'bufsize': 0,
         }
 
     @property
