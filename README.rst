@@ -22,6 +22,8 @@ Basic run functionality::
     >>> c.return_code
     0
 
+Commands can be passed in as lists as well (e.g. ``['ls', '-lrt']``), for parameterization.
+
 Basic chain functionality::
 
    >>> c = delegator.chain('fortune | cowsay')
