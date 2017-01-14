@@ -1,28 +1,8 @@
 import os
-import sys
 import subprocess
 import shlex
-import signal
 from pexpect.popen_spawn import PopenSpawn
 
-
-
-def _terminate_process(process):
-    if sys.platform == 'win32':
-        import ctypes
-        PROCESS_TERMINATE = 1
-        handle = ctypes.windll.kernel32.OpenProcess(PROCESS_TERMINATE, False, process.pid)
-        ctypes.windll.kernel32.TerminateProcess(handle, -1)
-        ctypes.windll.kernel32.CloseHandle(handle)
-    else:
-        os.kill(process.pid, signal.SIGTERM)
-
-
-def _kill_process(process):
-    if sys.platform == 'win32':
-        _terminate_process(process)
-    else:
-        os.kill(process.pid, signal.SIGKILL)
 
 
 class Command(object):
