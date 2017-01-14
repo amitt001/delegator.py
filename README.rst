@@ -9,7 +9,7 @@ This module features two main functions ``delegator.run()`` and ``delegator.chai
 Basic Usage
 -----------
 
-Basic run functionality:
+Basic run functionality::
 
     >>> c = delegator.run('ls')
     >>> print c.out
