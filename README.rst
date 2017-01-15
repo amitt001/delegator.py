@@ -82,6 +82,8 @@ Daemonize anything!
 Installation
 ------------
 
+::
+
     $ pip install delegator.py
     
 ✨🍰✨
