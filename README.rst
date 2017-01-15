@@ -1,7 +1,7 @@
-Delegator — Subprocesses for Humans 2.0
+Delegator.py — Subprocesses for Humans 2.0
 =======================================
 
-**Delegator** is a simple library for dealing with subprocesses, inspired
+**Delegator.py** is a simple library for dealing with subprocesses, inspired
 by both `envoy <https://github.com/kennethreitz/envoy>`_ and `pexpect <http://pexpect.readthedocs.io>`_ (in fact, it depends on it!).
 
 This module features two main functions ``delegator.run()`` and ``delegator.chain()``. One runs commands, blocking or non-blocking, and the other runs a chain of commands, seperated by the standard unix pipe operator: ``|``.
