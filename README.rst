@@ -32,6 +32,7 @@ Basic chain functionality:
 
    # Can also be called with ([['fortune'], ['cowsay']]).
    # or, delegator.run('fortune').pipe('cowsay')
+
    >>> c = delegator.chain('fortune | cowsay')
    >>> print c.out
      _______________________________________
