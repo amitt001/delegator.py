@@ -53,3 +53,6 @@ Other functions::
     >>> c.send('SIGTERM', signal=True)
     >>> c.err
     # only available when block=True, otherwise, use c.out
+
+    >>> c.daemonize()
+    # Turns the subprocess into a daemon.

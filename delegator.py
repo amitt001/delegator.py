@@ -1,8 +1,9 @@
 import os
 import subprocess
 import shlex
-from pexpect.popen_spawn import PopenSpawn
 
+from pexpect.popen_spawn import PopenSpawn
+import daemon
 
 
 class Command(object):
@@ -123,6 +124,11 @@ class Command(object):
     def block(self):
         """Blocks until process is complete."""
         self.subprocess.wait()
+
+    def daemonize(self):
+        """Daemonizes a non-blocking process."""
+        with daemon.DaemonContext():
+            self.block()
 
 
 def _expand_args(command):
