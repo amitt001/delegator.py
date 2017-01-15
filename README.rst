@@ -41,7 +41,7 @@ Basic chain functionality::
                     ||     ||
 
 
-Expect functionality is built-in too::
+Expect functionality is built-in too, on non-blocking commands::
 
     >>> c.expect('Password:')
     >>> c.send('PASSWORD')
@@ -51,8 +51,16 @@ Other functions::
 
     >>> c.kill()
     >>> c.send('SIGTERM', signal=True)
+
+    # Only available when block=True, otherwise, use c.out.
     >>> c.err
-    # only available when block=True, otherwise, use c.out
+    ''
+    
+    # Direct access to pipes. 
+    >>> c.std_err
+    <open file '<fdopen>', mode 'rU' at 0x10a5351e0>
+
+Daemonize anything! 
 
     >>> c.daemonize()
     # Turns the subprocess into a daemon.
