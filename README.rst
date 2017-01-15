@@ -30,6 +30,7 @@ Basic chain functionality:
 
 .. code:: pycon
 
+   # Can also be called with ([['fortune'], ['cowsay']]).
    >>> c = delegator.chain('fortune | cowsay')
    >>> print c.out
      _______________________________________
