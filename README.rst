@@ -78,3 +78,10 @@ Daemonize anything!
     # Turns the subprocess into a daemon.
     >>> c.daemonize()
 
+
+Installation
+------------
+
+    $ pip install delegator.py
+    
+✨🍰✨
