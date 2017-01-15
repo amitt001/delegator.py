@@ -144,9 +144,6 @@ class Command(object):
 
     def block(self):
         """Blocks until process is complete."""
-        if self.blocking:
-            raise RuntimeError('block can only be used on non-blocking commands.')
-
         self.subprocess.wait()
 
     def daemonize(self):
