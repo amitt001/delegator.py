@@ -38,6 +38,14 @@ class Command(object):
         }
 
     @property
+    def _uses_subprocess(self):
+        return isinstance(self.subprocess, subprocess.Popen)
+
+    @property
+    def _uses_pexpect(self):
+        return isinstance(self.subprocess, PopenSpawn)
+
+    @property
     def std_out(self):
         return self.subprocess.stdout
 
@@ -56,7 +64,7 @@ class Command(object):
 
     @property
     def out(self):
-        if isinstance(self.subprocess, subprocess.Popen):
+        if self._uses_subprocess:
             return self.std_out.read()
         else:
             return self._pexpect_out
@@ -67,7 +75,7 @@ class Command(object):
 
     @property
     def err(self):
-        if isinstance(self.subprocess, subprocess.Popen):
+        if self._uses_subprocess:
             return self.std_err.read()
         else:
             return self._pexpect_out
@@ -75,6 +83,10 @@ class Command(object):
     @property
     def pid(self):
         """The process' PID."""
+        # Support for pexpect's functionality.
+        if hasattr(self.subprocess, 'proc'):
+            return self.subprocess.proc.pid
+        # Standard subprocess method.
         return self.subprocess.pid
 
     @property
@@ -85,30 +97,39 @@ class Command(object):
             return self.subprocess.returncode
             raise RuntimeError('return codes can only be used for blocking commands.')
 
-
     @property
     def std_in(self):
         return self.subprocess.stdin
 
     def run(self, block=True):
+        """Runs the given command, with or without pexpect functionality enabled."""
         self.blocking = block
 
+        # Use subprocess.
         if self.blocking:
             s = subprocess.Popen(self._popen_args, **self._default_popen_kwargs)
+
+        # Otherwise, use pexpect.
         else:
             s = PopenSpawn(self._popen_args, **self._default_pexpect_kwargs)
         self.subprocess = s
 
     def expect(self, pattern, timeout=-1):
+        """Waits on the given pattern to appear in std_out"""
+
         if self.blocking:
-            raise RuntimeError('expect can only be run on non-blocking commands.')
-        """Waits on the following string to appear in std_out"""
+            raise RuntimeError('expect can only be used on non-blocking commands.')
+
         self.subprocess.expect(pattern=pattern, timeout=timeout)
 
     def send(self, s, end='\n', signal=False):
         """Sends the given string or signal to std_in."""
+
+        if self.blocking:
+            raise RuntimeError('send can only be used on non-blocking commands.')
+
         if not signal:
-            if isinstance(self.subprocess, subprocess.Popen):
+            if self._uses_subprocess:
                 return self.subprocess.communicate(s + end)
             else:
                 return self.subprocess.send(s + end)
@@ -123,10 +144,16 @@ class Command(object):
 
     def block(self):
         """Blocks until process is complete."""
+        if self.blocking:
+            raise RuntimeError('block can only be used on non-blocking commands.')
+
         self.subprocess.wait()
 
     def daemonize(self):
         """Daemonizes a non-blocking process."""
+        if self.blocking:
+            raise RuntimeError('daemonize can only be used on non-blocking commands.')
+
         with daemon.DaemonContext():
             self.block()
 
