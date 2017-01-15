@@ -13,6 +13,7 @@ class Command(object):
         self.subprocess = None
         self.blocking = None
         self.was_run = False
+        self.__out = None
 
     def __repr__(self):
         return '<Commmand {!r}>'.format(self.cmd)
@@ -65,10 +66,16 @@ class Command(object):
 
     @property
     def out(self):
+        """Std/out output (cached), as well as stderr for non-blocking runs."""
+        if self.__out:
+            return self.__out
+
         if self._uses_subprocess:
-            return self.std_out.read()
+            self.__out = self.std_out.read()
         else:
-            return self._pexpect_out
+            self.__out = self._pexpect_out
+
+        return self.__out
 
     @property
     def std_err(self):
@@ -124,7 +131,7 @@ class Command(object):
 
         self.subprocess.expect(pattern=pattern, timeout=timeout)
 
-    def send(self, s, end='\n', signal=False):
+    def send(self, s, end=os.linesep, signal=False):
         """Sends the given string or signal to std_in."""
 
         if self.blocking:
