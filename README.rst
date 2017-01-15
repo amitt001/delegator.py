@@ -9,7 +9,9 @@ This module features two main functions ``delegator.run()`` and ``delegator.chai
 Basic Usage
 -----------
 
-Basic run functionality::
+Basic run functionality:
+
+.. code:: pycon
 
     >>> c = delegator.run('ls')
     >>> print c.out
@@ -24,7 +26,9 @@ Basic run functionality::
 
 Commands can be passed in as lists as well (e.g. ``['ls', '-lrt']``), for parameterization.
 
-Basic chain functionality::
+Basic chain functionality:
+
+.. code:: pycon
 
    >>> c = delegator.chain('fortune | cowsay')
    >>> print c.out
@@ -41,13 +45,17 @@ Basic chain functionality::
                     ||     ||
 
 
-Expect functionality is built-in too, on non-blocking commands::
+Expect functionality is built-in too, on non-blocking commands:
+
+.. code:: pycon
 
     >>> c.expect('Password:')
     >>> c.send('PASSWORD')
     >>> c.block()
 
-Other functions::
+Other functions:
+
+.. code:: pycon
 
     >>> c.kill()
     >>> c.send('SIGTERM', signal=True)
@@ -62,7 +70,7 @@ Other functions::
 
 Daemonize anything! 
 
-::
+.. code:: pycon
 
     # Turns the subprocess into a daemon.
     >>> c.daemonize()
