@@ -62,5 +62,7 @@ Other functions::
 
 Daemonize anything! 
 
+::
+
     >>> c.daemonize()
     # Turns the subprocess into a daemon.
