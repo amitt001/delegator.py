@@ -31,6 +31,7 @@ Basic chain functionality:
 .. code:: pycon
 
    # Can also be called with ([['fortune'], ['cowsay']]).
+   # or, delegator.run('fortune').pipe('cowsay')
    >>> c = delegator.chain('fortune | cowsay')
    >>> print c.out
      _______________________________________
@@ -64,15 +65,15 @@ Other functions:
     # Only available when block=True, otherwise, use c.out.
     >>> c.err
     ''
-    
-    # Direct access to pipes. 
+
+    # Direct access to pipes.
     >>> c.std_err
     <open file '<fdopen>', mode 'rU' at 0x10a5351e0>
 
-Daemonize anything! 
+Daemonize anything!
 
 .. code:: pycon
 
     # Turns the subprocess into a daemon.
     >>> c.daemonize()
-    
+

@@ -12,6 +12,7 @@ class Command(object):
         self.cmd = cmd
         self.subprocess = None
         self.blocking = None
+        self.was_run = False
 
     def __repr__(self):
         return '<Commmand {!r}>'.format(self.cmd)
@@ -113,6 +114,7 @@ class Command(object):
         else:
             s = PopenSpawn(self._popen_args, **self._default_pexpect_kwargs)
         self.subprocess = s
+        self.was_run = True
 
     def expect(self, pattern, timeout=-1):
         """Waits on the given pattern to appear in std_out"""
@@ -153,6 +155,23 @@ class Command(object):
 
         with daemon.DaemonContext():
             self.block()
+
+    def pipe(self, command):
+        """Runs the current command and passes its output to the next
+        given process.
+        """
+        if not self.was_run:
+            self.run(block=False)
+
+        data = self.out
+
+        c = Command(command)
+        c.run(block=False)
+        if data:
+            c.send(data)
+            c.subprocess.sendeof()
+        c.block()
+        return c
 
 
 def _expand_args(command):
