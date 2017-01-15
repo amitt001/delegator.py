@@ -216,7 +216,6 @@ def chain(command):
             c.subprocess.sendeof()
 
         data = c.out
-        # c.block()
 
     return c
 
