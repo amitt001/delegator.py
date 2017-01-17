@@ -99,11 +99,7 @@ class Command(object):
 
     @property
     def return_code(self):
-        if isinstance(self.subprocess, subprocess.Popen):
-            return self.subprocess.returncode
-        else:
-            return self.subprocess.returncode
-            raise RuntimeError('return codes can only be used for blocking commands.')
+        return self.subprocess.returncode
 
     @property
     def std_in(self):
