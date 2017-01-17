@@ -5,6 +5,8 @@ import shlex
 from pexpect.popen_spawn import PopenSpawn
 import daemon
 
+# Enable Python subprocesses to work with expect functionality.
+os.environ['PYTHONUNBUFFERED'] = 1
 
 class Command(object):
     def __init__(self, cmd):
