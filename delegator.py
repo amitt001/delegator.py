@@ -6,7 +6,7 @@ from pexpect.popen_spawn import PopenSpawn
 import daemon
 
 # Enable Python subprocesses to work with expect functionality.
-os.environ['PYTHONUNBUFFERED'] = 1
+os.environ['PYTHONUNBUFFERED'] = '1'
 
 class Command(object):
     def __init__(self, cmd):
@@ -107,13 +107,18 @@ class Command(object):
     def std_in(self):
         return self.subprocess.stdin
 
-    def run(self, block=True):
+    def run(self, block=True, shell=False):
         """Runs the given command, with or without pexpect functionality enabled."""
         self.blocking = block
 
+        # Probably unneeded
+        if shell is not True and shell is not False:
+            self._default_popen_kwargs['env']['SHELL'] = str(shell)
+
         # Use subprocess.
         if self.blocking:
-            s = subprocess.Popen(self._popen_args, **self._default_popen_kwargs)
+            print(self._popen_args)
+            s = subprocess.Popen(self._popen_args, shell=shell, **self._default_popen_kwargs)
 
         # Otherwise, use pexpect.
         else:
@@ -201,6 +206,14 @@ def _expand_args(command):
     return command
 
 
+def _shell(path, command):
+    """Formats a shell command properly"""
+    command = command.replace("\'", "\\'").replace('\"', '\\"')
+    if path is not True and path is not False:
+        return "{} -c \'{}\'".format(path, command)
+    return command
+
+
 def chain(command):
     commands = _expand_args(command)
     data = None
@@ -218,9 +231,14 @@ def chain(command):
     return c
 
 
-def run(command, block=True):
-    c = Command(command)
-    c.run(block=block)
+def run(command, block=True, shell=None):
+    if shell:
+        command = _shell(shell, command)
+        c = Command(command)
+        c.run(block=block, shell=shell)
+    else:
+        c = Command(command)
+        c.run(block=block)
 
     if block:
         c.block()
