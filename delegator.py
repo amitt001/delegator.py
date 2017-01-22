@@ -63,7 +63,7 @@ class Command(object):
         if isinstance(self.subprocess.after, str):
             result += self.subprocess.after
 
-        result += self.subprocess.read()
+        result += str(self.subprocess.read())
         return result
 
     @property
