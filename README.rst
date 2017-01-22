@@ -71,12 +71,6 @@ Other functions:
     >>> c.std_err
     <open file '<fdopen>', mode 'rU' at 0x10a5351e0>
 
-Daemonize anything!
-
-.. code:: pycon
-
-    # Turns the subprocess into a daemon.
-    >>> c.daemonize()
 
 
 Installation
@@ -85,5 +79,5 @@ Installation
 ::
 
     $ pip install delegator.py
-    
+
 ✨🍰✨

@@ -3,7 +3,6 @@ import subprocess
 import shlex
 
 from pexpect.popen_spawn import PopenSpawn
-import daemon
 
 # Enable Python subprocesses to work with expect functionality.
 os.environ['PYTHONUNBUFFERED'] = '1'
@@ -153,14 +152,6 @@ class Command(object):
     def block(self):
         """Blocks until process is complete."""
         self.subprocess.wait()
-
-    def daemonize(self):
-        """Daemonizes a non-blocking process."""
-        if self.blocking:
-            raise RuntimeError('daemonize can only be used on non-blocking commands.')
-
-        with daemon.DaemonContext():
-            self.block()
 
     def pipe(self, command):
         """Runs the current command and passes its output to the next
