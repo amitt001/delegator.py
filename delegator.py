@@ -63,7 +63,7 @@ class Command(object):
         if isinstance(self.subprocess.after, str):
             result += self.subprocess.after
 
-        result += str(self.subprocess.read())
+        result += self.subprocess.read().decode('utf-8')
         return result
 
     @property
