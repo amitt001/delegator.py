@@ -35,7 +35,6 @@ class Command(object):
             'stdin': subprocess.PIPE,
             'stdout': subprocess.PIPE,
             'stderr': subprocess.PIPE,
-            'shell': True,
             'universal_newlines': True,
             'bufsize': 0,
         }
@@ -123,7 +122,7 @@ class Command(object):
     @shell.setter
     def shell(self, value):
         self.__shell = value
-    
+
 
     def _shell(self, command, shell):
         """Formats a shell command properly for subprocess."""
@@ -134,7 +133,7 @@ class Command(object):
             self._popen_args = "{} -c \'{}\'".format(shell, command)
             return
         self._popen_args = command
-    
+
 
     def run(self, block=True, shell=False):
         """Runs the given command, with or without pexpect functionality enabled."""
