@@ -14,7 +14,6 @@ class Command(object):
         self.subprocess = None
         self.blocking = None
         self.was_run = False
-        self.__shell = ''
         self.__out = None
 
     def __repr__(self):
@@ -24,10 +23,6 @@ class Command(object):
     def _popen_args(self):
         return self.cmd
 
-    @_popen_args.setter
-    def _popen_args(self, value):
-        self.cmd = value
-
     @property
     def _default_popen_kwargs(self):
         return {
@@ -35,6 +30,7 @@ class Command(object):
             'stdin': subprocess.PIPE,
             'stdout': subprocess.PIPE,
             'stderr': subprocess.PIPE,
+            'shell': True,
             'universal_newlines': True,
             'bufsize': 0,
         }
@@ -111,45 +107,17 @@ class Command(object):
     def std_in(self):
         return self.subprocess.stdin
 
-    @property
-    def shell(self):
-        if self.__shell is True:
-            return '/bin/sh'
-        elif self.__shell is False:
-            return ''
-        return str(self.__shell)
-
-    @shell.setter
-    def shell(self, value):
-        self.__shell = value
-
-
-    def _shell(self, command, shell):
-        """Formats a shell command properly for subprocess."""
-        self.shell = shell
-        command = command.replace("\'", "\\'").replace('\"', '\\"')
-
-        if type(shell) is str:
-            self._popen_args = "{} -c \'{}\'".format(shell, command)
-            return
-        self._popen_args = command
-
-
-    def run(self, block=True, shell=False):
+    def run(self, block=True):
         """Runs the given command, with or without pexpect functionality enabled."""
         self.blocking = block
 
-        if type(shell) is str or shell is True:
-            self._shell(self._popen_args, shell)
-
         # Use subprocess.
         if self.blocking:
-            s = subprocess.Popen(self._popen_args, shell=shell, **self._default_popen_kwargs)
+            s = subprocess.Popen(self._popen_args, **self._default_popen_kwargs)
 
         # Otherwise, use pexpect.
         else:
-            s = PopenSpawn(self._popen_args,  **self._default_pexpect_kwargs)
-
+            s = PopenSpawn(self._popen_args, **self._default_pexpect_kwargs)
         self.subprocess = s
         self.was_run = True
 
@@ -190,12 +158,12 @@ class Command(object):
         given process.
         """
         if not self.was_run:
-            self.run(block=False, shell=self.__shell)
+            self.run(block=False)
 
         data = self.out
 
         c = Command(command)
-        c.run(block=False, shell=self.__shell)
+        c.run(block=False)
         if data:
             c.send(data)
             c.subprocess.sendeof()
@@ -242,9 +210,9 @@ def chain(command):
     return c
 
 
-def run(command, block=True, shell=False):
+def run(command, block=True):
     c = Command(command)
-    c.run(block=block, shell=shell)
+    c.run(block=block)
 
     if block:
         c.block()
