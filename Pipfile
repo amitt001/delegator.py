@@ -1,0 +1,6 @@
+[[source]]
+url = "https://pypi.org/"
+verify_ssl = true
+
+[packages]
+pexpect = "*"

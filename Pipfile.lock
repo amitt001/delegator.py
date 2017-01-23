@@ -1,0 +1,17 @@
+{
+    "default": {
+        "pexpect": "==4.2.1",
+        "ptyprocess": "==0.5.1"
+    },
+    "develop": {},
+    "_meta": {
+        "sources": [
+            {
+                "url": "https://pypi.org/",
+                "verify_ssl": true
+            }
+        ],
+        "requires": {},
+        "Pipfile-sha256": "ab4a6ea0d82410e909c01479e80c5fcc86de72bd1593f5205e6c930e50da3702"
+    }
+}
