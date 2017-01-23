@@ -14,6 +14,7 @@ class Command(object):
         self.subprocess = None
         self.blocking = None
         self.was_run = False
+        self.__shell = ''
         self.__out = None
 
     def __repr__(self):
@@ -22,6 +23,10 @@ class Command(object):
     @property
     def _popen_args(self):
         return self.cmd
+
+    @_popen_args.setter
+    def _popen_args(self, value):
+        self.cmd = value
 
     @property
     def _default_popen_kwargs(self):
@@ -107,17 +112,45 @@ class Command(object):
     def std_in(self):
         return self.subprocess.stdin
 
-    def run(self, block=True):
+    @property
+    def shell(self):
+        if self.__shell is True:
+            return '/bin/sh'
+        elif self.__shell is False:
+            return ''
+        return str(self.__shell)
+
+    @shell.setter
+    def shell(self, value):
+        self.__shell = value
+    
+
+    def _shell(self, command, shell):
+        """Formats a shell command properly for subprocess."""
+        self.shell = shell
+        command = command.replace("\'", "\\'").replace('\"', '\\"')
+
+        if type(shell) is str:
+            self._popen_args = "{} -c \'{}\'".format(shell, command)
+            return
+        self._popen_args = command
+    
+
+    def run(self, block=True, shell=False):
         """Runs the given command, with or without pexpect functionality enabled."""
         self.blocking = block
 
+        if type(shell) is str or shell is True:
+            self._shell(self._popen_args, shell)
+
         # Use subprocess.
         if self.blocking:
-            s = subprocess.Popen(self._popen_args, **self._default_popen_kwargs)
+            s = subprocess.Popen(self._popen_args, shell=shell, **self._default_popen_kwargs)
 
         # Otherwise, use pexpect.
         else:
-            s = PopenSpawn(self._popen_args, **self._default_pexpect_kwargs)
+            s = PopenSpawn(self._popen_args,  **self._default_pexpect_kwargs)
+
         self.subprocess = s
         self.was_run = True
 
@@ -158,12 +191,12 @@ class Command(object):
         given process.
         """
         if not self.was_run:
-            self.run(block=False)
+            self.run(block=False, shell=self.__shell)
 
         data = self.out
 
         c = Command(command)
-        c.run(block=False)
+        c.run(block=False, shell=self.__shell)
         if data:
             c.send(data)
             c.subprocess.sendeof()
@@ -210,9 +243,9 @@ def chain(command):
     return c
 
 
-def run(command, block=True):
+def run(command, block=True, shell=False):
     c = Command(command)
-    c.run(block=block)
+    c.run(block=block, shell=shell)
 
     if block:
         c.block()
