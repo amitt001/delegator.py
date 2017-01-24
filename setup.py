@@ -30,7 +30,7 @@ required = [
 
 setup(
     name='delegator.py',
-    version='0.0.7',
+    version='0.0.8',
     description='Subprocesses for Humans 2.0.',
     long_description=long_description,
     author='Kenneth Reitz',
@@ -39,7 +39,14 @@ setup(
     py_modules=['delegator'],
     install_requires=required,
     license='MIT',
-    classifiers=(
-
-    ),
-)
+    classifiers=['Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
+]
