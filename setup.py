@@ -25,12 +25,12 @@ if sys.argv[-1] == "publish":
     sys.exit()
 
 required = [
-    'pexpect'
+    'pexpect>=4.1.0'
 ]
 
 setup(
     name='delegator.py',
-    version='0.0.5',
+    version='0.0.6',
     description='Subprocesses for Humans 2.0.',
     long_description=long_description,
     author='Kenneth Reitz',
