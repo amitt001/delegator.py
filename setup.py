@@ -39,7 +39,8 @@ setup(
     py_modules=['delegator'],
     install_requires=required,
     license='MIT',
-    classifiers=['Programming Language :: Python',
+    classifiers=[
+        'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
@@ -49,4 +50,4 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
-]
+])
