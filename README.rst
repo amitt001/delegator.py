@@ -1,6 +1,26 @@
 Delegator.py — Subprocesses for Humans 2.0
 =======================================
 
+
+.. image:: https://img.shields.io/pypi/v/delegator.py.svg
+    :target: https://pypi.python.org/pypi/delegator.py
+
+.. image:: https://img.shields.io/pypi/l/delegator.py.svg
+    :target: https://pypi.python.org/pypi/delegator.py
+
+.. image:: https://img.shields.io/pypi/wheel/delegator.py.svg
+    :target: https://pypi.python.org/pypi/delegator.py
+
+.. image:: https://img.shields.io/pypi/pyversions/delegator.py.svg
+    :target: https://pypi.python.org/pypi/delegator.py
+
+.. image:: https://travis-ci.org/kennethreitz/delegator.py.svg?branch=master
+    :target: https://travis-ci.org/kennethreitz/delegator.py
+
+.. image:: https://img.shields.io/badge/SayThanks.io-☼-1EAEDB.svg
+    :target: https://saythanks.io/to/kennethreitz
+
+
 **Delegator.py** is a simple library for dealing with subprocesses, inspired
 by both `envoy <https://github.com/kennethreitz/envoy>`_ and `pexpect <http://pexpect.readthedocs.io>`_ (in fact, it depends on it!).
 
