@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shlex
+import psutil
 
 from pexpect.popen_spawn import PopenSpawn
 
@@ -99,6 +100,10 @@ class Command(object):
         # Standard subprocess method.
         return self.subprocess.pid
 
+    @property
+    def is_alive(self):
+        return psutil.pid_exists(self.pid)
+    
     @property
     def return_code(self):
         return self.subprocess.returncode
