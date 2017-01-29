@@ -17,7 +17,7 @@ class Command(object):
         self.__out = None
 
     def __repr__(self):
-        return '<Commmand {!r}>'.format(self.cmd)
+        return '<Command {!r}>'.format(self.cmd)
 
     @property
     def _popen_args(self):
