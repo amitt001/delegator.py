@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shlex
+import signal
 
 from pexpect.popen_spawn import PopenSpawn
 
@@ -147,7 +148,7 @@ class Command(object):
         self.subprocess.terminate()
 
     def kill(self):
-        self.subprocess.kill()
+        self.subprocess.kill(signal.SIGINT)
 
     def block(self):
         """Blocks until process is complete."""
