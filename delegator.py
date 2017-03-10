@@ -101,6 +101,10 @@ class Command(object):
 
     @property
     def return_code(self):
+        # Support for pexpect's functionality.
+        if self._uses_pexpect:
+            return self.subprocess.exitstatus
+        # Standard subprocess method.
         return self.subprocess.returncode
 
     @property
