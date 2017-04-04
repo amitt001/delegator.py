@@ -8,6 +8,12 @@ from pexpect.popen_spawn import PopenSpawn
 # Enable Python subprocesses to work with expect functionality.
 os.environ['PYTHONUNBUFFERED'] = '1'
 
+try:
+    STR_TYPES = (str, unicode)
+except:
+    STR_TYPES = (str, )
+
+
 class Command(object):
     def __init__(self, cmd):
         super(Command, self).__init__()
@@ -180,7 +186,7 @@ def _expand_args(command):
     """Parses command strings and returns a Popen-ready list."""
 
     # Prepare arguments.
-    if isinstance(command, (str, unicode)):
+    if isinstance(command, STR_TYPES):
         splitter = shlex.shlex(command.encode('utf-8'))
         splitter.whitespace = '|'
         splitter.whitespace_split = True
