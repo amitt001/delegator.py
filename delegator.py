@@ -22,6 +22,7 @@ class Command(object):
         self.blocking = None
         self.was_run = False
         self.__out = None
+        self.__err = None
 
     def __repr__(self):
         return '<Command {!r}>'.format(self.cmd)
@@ -75,7 +76,7 @@ class Command(object):
 
     @property
     def out(self):
-        """Std/out output (cached), as well as stderr for non-blocking runs."""
+        """Std/out output (cached)"""
         if self.__out:
             return self.__out
 
@@ -92,8 +93,13 @@ class Command(object):
 
     @property
     def err(self):
+        """Std/err output (cached)"""
+        if self.__err:
+            return self.__err
+
         if self._uses_subprocess:
-            return self.std_err.read()
+            self.__err = self.std_err.read()
+            return self.__err
         else:
             return self._pexpect_out
 
@@ -162,7 +168,13 @@ class Command(object):
 
     def block(self):
         """Blocks until process is complete."""
-        self.subprocess.wait()
+        if self._uses_subprocess:
+            # consume stdout and stderr
+            stdout, stderr = self.subprocess.communicate()
+            self.__out = stdout
+            self.__err = stderr
+        else:
+            self.subprocess.wait()
 
     def pipe(self, command):
         """Runs the current command and passes its output to the next
