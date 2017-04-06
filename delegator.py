@@ -47,6 +47,7 @@ class Command(object):
     def _default_pexpect_kwargs(self):
         return {
             'env': os.environ.copy(),
+            'encoding': 'utf-8'
         }
 
     @property
@@ -63,15 +64,18 @@ class Command(object):
 
     @property
     def _pexpect_out(self):
-        result = ''
+        if self.subprocess.encoding:
+            result = ''
+        else:
+            result = b''
 
         if self.subprocess.before:
             result += self.subprocess.before
 
-        if isinstance(self.subprocess.after, str):
+        if isinstance(self.subprocess.after, (bytes, str)):
             result += self.subprocess.after
 
-        result += self.subprocess.read().decode('utf-8')
+        result += self.subprocess.read()
         return result
 
     @property
@@ -124,17 +128,21 @@ class Command(object):
     def std_in(self):
         return self.subprocess.stdin
 
-    def run(self, block=True):
+    def run(self, block=True, binary=False):
         """Runs the given command, with or without pexpect functionality enabled."""
         self.blocking = block
 
         # Use subprocess.
         if self.blocking:
-            s = subprocess.Popen(self._popen_args, **self._default_popen_kwargs)
-
+            popen_kwargs = self._default_popen_kwargs.copy()
+            popen_kwargs['universal_newlines'] = not binary
+            s = subprocess.Popen(self._popen_args, **popen_kwargs)
         # Otherwise, use pexpect.
         else:
-            s = PopenSpawn(self._popen_args, **self._default_pexpect_kwargs)
+            pexpect_kwargs = self._default_pexpect_kwargs.copy()
+            if binary:
+                pexpect_kwargs['encoding'] = None
+            s = PopenSpawn(self._popen_args, **pexpect_kwargs)
         self.subprocess = s
         self.was_run = True
 
@@ -233,9 +241,9 @@ def chain(command):
     return c
 
 
-def run(command, block=True):
+def run(command, block=True, binary=False):
     c = Command(command)
-    c.run(block=block)
+    c.run(block=block, binary=binary)
 
     if block:
         c.block()
