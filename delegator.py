@@ -72,7 +72,7 @@ class Command(object):
         if self.subprocess.before:
             result += self.subprocess.before
 
-        if isinstance(self.subprocess.after, (bytes, str)):
+        if self.subprocess.after:
             result += self.subprocess.after
 
         result += self.subprocess.read()
