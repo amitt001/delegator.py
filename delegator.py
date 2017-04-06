@@ -8,9 +8,10 @@ from pexpect.popen_spawn import PopenSpawn
 # Enable Python subprocesses to work with expect functionality.
 os.environ['PYTHONUNBUFFERED'] = '1'
 
+# Include `unicode` in STR_TYPES for Python 2.X
 try:
     STR_TYPES = (str, unicode)
-except:
+except NameError:
     STR_TYPES = (str, )
 
 
