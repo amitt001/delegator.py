@@ -16,9 +16,11 @@ except NameError:
 
 
 class Command(object):
-    def __init__(self, cmd):
+
+    def __init__(self, cmd, timeout=30):
         super(Command, self).__init__()
         self.cmd = cmd
+        self.timeout = timeout
         self.subprocess = None
         self.blocking = None
         self.was_run = False
@@ -48,7 +50,8 @@ class Command(object):
     def _default_pexpect_kwargs(self):
         return {
             'env': os.environ.copy(),
-            'encoding': 'utf-8'
+            'encoding': 'utf-8',
+            'timeout': self.timeout
         }
 
     @property
@@ -151,7 +154,8 @@ class Command(object):
         """Waits on the given pattern to appear in std_out"""
 
         if self.blocking:
-            raise RuntimeError('expect can only be used on non-blocking commands.')
+            raise RuntimeError(
+                'expect can only be used on non-blocking commands.')
 
         self.subprocess.expect(pattern=pattern, timeout=timeout)
 
@@ -159,7 +163,8 @@ class Command(object):
         """Sends the given string or signal to std_in."""
 
         if self.blocking:
-            raise RuntimeError('send can only be used on non-blocking commands.')
+            raise RuntimeError(
+                'send can only be used on non-blocking commands.')
 
         if not signal:
             if self._uses_subprocess:
@@ -242,8 +247,8 @@ def chain(command):
     return c
 
 
-def run(command, block=True, binary=False):
-    c = Command(command)
+def run(command, block=True, binary=False, timeout=30):
+    c = Command(command, timeout)
     c.run(block=block, binary=binary)
 
     if block:
