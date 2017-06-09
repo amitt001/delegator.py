@@ -14,10 +14,11 @@ try:
 except NameError:
     STR_TYPES = (str, )
 
-
+TIMEOUT = 30
+    
 class Command(object):
 
-    def __init__(self, cmd, timeout=30):
+    def __init__(self, cmd, timeout):
         super(Command, self).__init__()
         self.cmd = cmd
         self.timeout = timeout
@@ -188,7 +189,7 @@ class Command(object):
         else:
             self.subprocess.wait()
 
-    def pipe(self, command):
+    def pipe(self, command, timeout=TIMEOUT):
         """Runs the current command and passes its output to the next
         given process.
         """
@@ -197,7 +198,7 @@ class Command(object):
 
         data = self.out
 
-        c = Command(command)
+        c = Command(command, timeout)
         c.run(block=False)
         if data:
             c.send(data)
@@ -228,7 +229,7 @@ def _expand_args(command):
     return command
 
 
-def chain(command, timeout=30):
+def chain(command, timeout=TIMEOUT):
     commands = _expand_args(command)
     data = None
 
@@ -245,7 +246,7 @@ def chain(command, timeout=30):
     return c
 
 
-def run(command, block=True, binary=False, timeout=30):
+def run(command, block=True, binary=False, timeout=TIMEOUT):
     c = Command(command, timeout)
     c.run(block=block, binary=binary)
 
