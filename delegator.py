@@ -228,13 +228,13 @@ def _expand_args(command):
     return command
 
 
-def chain(command):
+def chain(command, timeout=30):
     commands = _expand_args(command)
     data = None
 
     for command in commands:
 
-        c = run(command, block=False)
+        c = run(command, block=False, timeout=timeout)
 
         if data:
             c.send(data)
