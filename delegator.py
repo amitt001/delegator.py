@@ -18,7 +18,7 @@ TIMEOUT = 30
     
 class Command(object):
 
-    def __init__(self, cmd, timeout):
+    def __init__(self, cmd, timeout=TIMEOUT):
         super(Command, self).__init__()
         self.cmd = cmd
         self.timeout = timeout
@@ -189,10 +189,13 @@ class Command(object):
         else:
             self.subprocess.wait()
 
-    def pipe(self, command, timeout=TIMEOUT):
+    def pipe(self, command, timeout):
         """Runs the current command and passes its output to the next
         given process.
         """
+        if not timeout:
+            timeout = self.timeout
+        
         if not self.was_run:
             self.run(block=False)
 
@@ -247,7 +250,7 @@ def chain(command, timeout=TIMEOUT):
 
 
 def run(command, block=True, binary=False, timeout=TIMEOUT):
-    c = Command(command, timeout)
+    c = Command(command, timeout=timeout)
     c.run(block=block, binary=binary)
 
     if block:
