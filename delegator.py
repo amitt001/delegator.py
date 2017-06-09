@@ -15,7 +15,7 @@ except NameError:
     STR_TYPES = (str, )
 
 TIMEOUT = 30
-    
+
 class Command(object):
 
     def __init__(self, cmd, timeout=TIMEOUT):
@@ -189,19 +189,23 @@ class Command(object):
         else:
             self.subprocess.wait()
 
-    def pipe(self, command, timeout):
+    def pipe(self, command, timeout=None):
         """Runs the current command and passes its output to the next
         given process.
         """
         if not timeout:
             timeout = self.timeout
-        
+
         if not self.was_run:
             self.run(block=False)
 
         data = self.out
 
-        c = Command(command, timeout)
+        if timeout:
+            c = Command(command, timeout)
+        else:
+            c = Command(command)
+
         c.run(block=False)
         if data:
             c.send(data)
