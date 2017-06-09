@@ -154,8 +154,7 @@ class Command(object):
         """Waits on the given pattern to appear in std_out"""
 
         if self.blocking:
-            raise RuntimeError(
-                'expect can only be used on non-blocking commands.')
+            raise RuntimeError('expect can only be used on non-blocking commands.')
 
         self.subprocess.expect(pattern=pattern, timeout=timeout)
 
@@ -163,8 +162,7 @@ class Command(object):
         """Sends the given string or signal to std_in."""
 
         if self.blocking:
-            raise RuntimeError(
-                'send can only be used on non-blocking commands.')
+            raise RuntimeError('send can only be used on non-blocking commands.')
 
         if not signal:
             if self._uses_subprocess:
