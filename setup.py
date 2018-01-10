@@ -30,7 +30,7 @@ required = [
 
 setup(
     name='delegator.py',
-    version='0.0.13',
+    version='0.0.14',
     description='Subprocesses for Humans 2.0.',
     long_description=long_description,
     author='Kenneth Reitz',

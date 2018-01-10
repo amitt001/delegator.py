@@ -43,7 +43,7 @@ class Command(object):
             'stderr': subprocess.PIPE,
             'shell': True,
             'universal_newlines': True,
-            'bufsize': 0,
+            'bufsize': 0
         }
 
     @property
@@ -137,7 +137,7 @@ class Command(object):
     def std_in(self):
         return self.subprocess.stdin
 
-    def run(self, block=True, binary=False):
+    def run(self, block=True, binary=False, cwd=None):
         """Runs the given command, with or without pexpect functionality enabled."""
         self.blocking = block
 
@@ -145,12 +145,16 @@ class Command(object):
         if self.blocking:
             popen_kwargs = self._default_popen_kwargs.copy()
             popen_kwargs['universal_newlines'] = not binary
+            if cwd:
+                popen_kwargs['cwd'] = cwd
             s = subprocess.Popen(self._popen_args, **popen_kwargs)
         # Otherwise, use pexpect.
         else:
             pexpect_kwargs = self._default_pexpect_kwargs.copy()
             if binary:
                 pexpect_kwargs['encoding'] = None
+            if cwd:
+                pexpect_kwargs['cwd'] = cwd
             # Enable Python subprocesses to work with expect functionality.
             pexpect_kwargs['env']['PYTHONUNBUFFERED'] = '1'
             s = PopenSpawn(self._popen_args, **pexpect_kwargs)
@@ -198,7 +202,7 @@ class Command(object):
         else:
             self.subprocess.wait()
 
-    def pipe(self, command, timeout=None):
+    def pipe(self, command, timeout=None, cwd=None):
         """Runs the current command and passes its output to the next
         given process.
         """
@@ -206,7 +210,7 @@ class Command(object):
             timeout = self.timeout
 
         if not self.was_run:
-            self.run(block=False)
+            self.run(block=False, cwd=cwd)
 
         data = self.out
 
@@ -215,7 +219,7 @@ class Command(object):
         else:
             c = Command(command)
 
-        c.run(block=False)
+        c.run(block=False, cwd=cwd)
         if data:
             c.send(data)
             c.subprocess.sendeof()
@@ -250,13 +254,13 @@ def _expand_args(command):
     return command
 
 
-def chain(command, timeout=TIMEOUT):
+def chain(command, timeout=TIMEOUT, cwd=None):
     commands = _expand_args(command)
     data = None
 
     for command in commands:
 
-        c = run(command, block=False, timeout=timeout)
+        c = run(command, block=False, timeout=timeout, cwd=cwd)
 
         if data:
             c.send(data)
@@ -267,9 +271,9 @@ def chain(command, timeout=TIMEOUT):
     return c
 
 
-def run(command, block=True, binary=False, timeout=TIMEOUT):
+def run(command, block=True, binary=False, timeout=TIMEOUT, cwd=None):
     c = Command(command, timeout=timeout)
-    c.run(block=block, binary=binary)
+    c.run(block=block, binary=binary, cwd=cwd)
 
     if block:
         c.block()
