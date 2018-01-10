@@ -232,7 +232,7 @@ def _expand_args(command):
 
     # Prepare arguments.
     if isinstance(command, STR_TYPES):
-        splitter = shlex.shlex(command.encode('utf-8'))
+        splitter = shlex.shlex(command)
         splitter.whitespace = '|'
         splitter.whitespace_split = True
         command = []
