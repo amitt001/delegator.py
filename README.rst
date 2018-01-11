@@ -73,6 +73,12 @@ Expect functionality is built-in too, on non-blocking commands:
     >>> c.send('PASSWORD')
     >>> c.block()
 
+.. code:: pycon
+
+    >>> program = "import os; print(os.environ.get('FOO'))
+    >>> c = delegator.run('python -c "import os; print os.environ.get(\'FOO\')" ', extra_env = {'FOO': 'bar' })
+    bar
+
 Other functions:
 
 .. code:: pycon
