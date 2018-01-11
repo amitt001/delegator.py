@@ -17,10 +17,11 @@ TIMEOUT = 30
 
 class Command(object):
 
-    def __init__(self, cmd, timeout=TIMEOUT):
+    def __init__(self, cmd, timeout=TIMEOUT, extra_env={}):
         super(Command, self).__init__()
         self.cmd = cmd
         self.timeout = timeout
+        self.extra_env = extra_env
         self.subprocess = None
         self.blocking = None
         self.was_run = False
@@ -37,7 +38,7 @@ class Command(object):
     @property
     def _default_popen_kwargs(self):
         return {
-            'env': os.environ.copy(),
+            'env': self._environ,
             'stdin': subprocess.PIPE,
             'stdout': subprocess.PIPE,
             'stderr': subprocess.PIPE,
@@ -54,10 +55,16 @@ class Command(object):
             if default_encoding is not None:
                 encoding = default_encoding
         return {
-            'env': os.environ.copy(),
+            'env': self._environ,
             'encoding': encoding,
             'timeout': self.timeout
         }
+
+    @property
+    def _environ(self):
+        environ = os.environ.copy()
+        environ.update(self.extra_env)
+        return environ
 
     @property
     def _uses_subprocess(self):
@@ -271,8 +278,8 @@ def chain(command, timeout=TIMEOUT, cwd=None):
     return c
 
 
-def run(command, block=True, binary=False, timeout=TIMEOUT, cwd=None):
-    c = Command(command, timeout=timeout)
+def run(command, block=True, binary=False, timeout=TIMEOUT, cwd=None, extra_env={}):
+    c = Command(command, timeout=timeout, extra_env=extra_env)
     c.run(block=block, binary=binary, cwd=cwd)
 
     if block:
