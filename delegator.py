@@ -137,7 +137,7 @@ class Command(object):
     def std_in(self):
         return self.subprocess.stdin
 
-    def run(self, block=True, binary=False, cwd=None):
+    def run(self, block=True, binary=False, cwd=None, env=None):
         """Runs the given command, with or without pexpect functionality enabled."""
         self.blocking = block
 
@@ -147,6 +147,8 @@ class Command(object):
             popen_kwargs['universal_newlines'] = not binary
             if cwd:
                 popen_kwargs['cwd'] = cwd
+            if env:
+                popen_kwargs['env'].update(env)
             s = subprocess.Popen(self._popen_args, **popen_kwargs)
         # Otherwise, use pexpect.
         else:
@@ -155,6 +157,8 @@ class Command(object):
                 pexpect_kwargs['encoding'] = None
             if cwd:
                 pexpect_kwargs['cwd'] = cwd
+            if env:
+                pexpect_kwargs['env'].update(env)
             # Enable Python subprocesses to work with expect functionality.
             pexpect_kwargs['env']['PYTHONUNBUFFERED'] = '1'
             s = PopenSpawn(self._popen_args, **pexpect_kwargs)
@@ -254,13 +258,13 @@ def _expand_args(command):
     return command
 
 
-def chain(command, timeout=TIMEOUT, cwd=None):
+def chain(command, timeout=TIMEOUT, cwd=None, env=None):
     commands = _expand_args(command)
     data = None
 
     for command in commands:
 
-        c = run(command, block=False, timeout=timeout, cwd=cwd)
+        c = run(command, block=False, timeout=timeout, cwd=cwd, env=env)
 
         if data:
             c.send(data)
@@ -271,11 +275,12 @@ def chain(command, timeout=TIMEOUT, cwd=None):
     return c
 
 
-def run(command, block=True, binary=False, timeout=TIMEOUT, cwd=None):
+def run(command, block=True, binary=False, timeout=TIMEOUT, cwd=None, env=None):
     c = Command(command, timeout=timeout)
-    c.run(block=block, binary=binary, cwd=cwd)
+    c.run(block=block, binary=binary, cwd=cwd, env=env)
 
     if block:
         c.block()
 
     return c
+
