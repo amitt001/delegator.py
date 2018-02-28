@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shlex
+import psutil
 import signal
 import sys
 import locale
@@ -125,6 +126,10 @@ class Command(object):
         # Standard subprocess method.
         return self.subprocess.pid
 
+    @property
+    def is_alive(self):
+        return psutil.pid_exists(self.pid)
+    
     @property
     def return_code(self):
         # Support for pexpect's functionality.
