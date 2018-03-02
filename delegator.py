@@ -4,6 +4,7 @@ import shlex
 import signal
 import sys
 import locale
+import errno
 
 from pexpect.popen_spawn import PopenSpawn
 
