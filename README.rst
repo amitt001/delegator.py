@@ -88,6 +88,11 @@ Other functions:
     >>> c.std_err
     <open file '<fdopen>', mode 'rU' at 0x10a5351e0>
 
+    # Adjust environment variables for the command (existing will be overwritten).
+    >>> c = delegator.chain('env | grep NEWENV', env={'NEWENV': 'FOO_BAR'})
+    >>> c.out
+    NEWENV=FOO_BAR
+
 
 
 Installation
