@@ -308,12 +308,19 @@ def chain(command, timeout=TIMEOUT, cwd=None, env=None):
     return c
 
 
-def run(command, block=True, binary=False, timeout=TIMEOUT, cwd=None, env=None):
-    c = Command(command, timeout=timeout)
+def run(
+    command,
+    block=True,
+    binary=False,
+    timeout=TIMEOUT,
+    cwd=None,
+    env=None,
+    command_cls=Command,
+):
+    c = command_cls(command, timeout=timeout)
     c.run(block=block, binary=binary, cwd=cwd, env=env)
 
     if block:
         c.block()
 
     return c
-
