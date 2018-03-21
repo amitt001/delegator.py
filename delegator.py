@@ -224,7 +224,10 @@ class Command(object):
         self.subprocess.terminate()
 
     def kill(self):
-        self.subprocess.kill(signal.SIGINT)
+        if self._uses_pexpect:
+            self.subprocess.kill(signal.SIGINT)
+        else:
+            self.subprocess.send_signal(signal.SIGINT)
 
     def block(self):
         """Blocks until process is complete."""
