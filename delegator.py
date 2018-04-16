@@ -182,7 +182,11 @@ class Command(object):
                 popen_kwargs['cwd'] = cwd
             if env:
                 popen_kwargs['env'].update(env)
-            s = subprocess.Popen(self._popen_args, **popen_kwargs)
+            args = self._popen_args
+            if not isinstance(args, str):
+                # It is recommended to pass a sequence based on docs.
+                args = subprocess.list2cmdline(args)
+            s = subprocess.Popen(args, **popen_kwargs)
         # Otherwise, use pexpect.
         else:
             pexpect_kwargs = self._default_pexpect_kwargs.copy()
