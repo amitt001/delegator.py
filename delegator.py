@@ -7,6 +7,7 @@ import locale
 import errno
 
 from pexpect.popen_spawn import PopenSpawn
+from pexpect.exceptions import EOF
 
 # Include `unicode` in STR_TYPES for Python 2.X
 try:
@@ -109,7 +110,7 @@ class Command(object):
         if self.subprocess.before:
             result += self.subprocess.before
 
-        if self.subprocess.after:
+        if self.subprocess.after and not isinstance(self.subprocess.after, EOF.__class__):
             result += self.subprocess.after
 
         result += self.subprocess.read()
