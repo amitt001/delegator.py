@@ -98,7 +98,7 @@ class Command(object):
 
     @property
     def ok(self):
-        return self.return_code > 0
+        return self.return_code == 0
 
     @property
     def _pexpect_out(self):
