@@ -178,6 +178,7 @@ class Command(object):
         # Use subprocess.
         if self.blocking:
             popen_kwargs = self._default_popen_kwargs.copy()
+            del popen_kwargs["stdin"]
             popen_kwargs["universal_newlines"] = not binary
             if cwd:
                 popen_kwargs["cwd"] = cwd
@@ -233,19 +234,23 @@ class Command(object):
     def block(self):
         """Blocks until process is complete."""
         if self._uses_subprocess:
-            # Close open file handles to prevent leaking them
-            self.subprocess.stdout.close()
             # consume stdout and stderr
-            try:
-                stdout, stderr = self.subprocess.communicate()
-                self.__out = stdout
-                self.__err = stderr
-            except ValueError:
-                pass  # Don't read from finished subprocesses.
+            if self.blocking:
+                try:
+                    stdout, stderr = self.subprocess.communicate()
+                    self.__out = stdout
+                    self.__err = stderr
+                except ValueError:
+                    pass  # Don't read from finished subprocesses.
+            else:
+                self.subprocess.stdin.close()
+                self.std_out.close()
+                self.std_err.close()
+                self.subprocess.wait()
         else:
             self.subprocess.sendeof()
-            self.subprocess.proc.stdout.close()
             self.subprocess.wait()
+            self.subprocess.proc.stdout.close()
 
     def pipe(self, command, timeout=None, cwd=None):
         """Runs the current command and passes its output to the next
