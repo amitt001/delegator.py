@@ -233,6 +233,8 @@ class Command(object):
     def block(self):
         """Blocks until process is complete."""
         if self._uses_subprocess:
+            # Close open file handles to prevent leaking them
+            self.subprocess.stdout.close()
             # consume stdout and stderr
             try:
                 stdout, stderr = self.subprocess.communicate()
@@ -241,6 +243,8 @@ class Command(object):
             except ValueError:
                 pass  # Don't read from finished subprocesses.
         else:
+            self.subprocess.sendeof()
+            self.subprocess.proc.stdout.close()
             self.subprocess.wait()
 
     def pipe(self, command, timeout=None, cwd=None):
