@@ -38,6 +38,7 @@ setup(
     url='https://github.com/kennethreitz/delegator',
     py_modules=['delegator'],
     install_requires=required,
+    tests_require=['pytest'],
     license='MIT',
     classifiers=[
         'Programming Language :: Python',
