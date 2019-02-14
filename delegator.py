@@ -143,9 +143,10 @@ class Command(object):
 
         if self._uses_subprocess:
             self.__err = self.std_err.read()
-            return self.__err
         else:
-            return self._pexpect_out
+            self.__err = self._pexpect_out
+
+        return self.__err
 
     @property
     def pid(self):
