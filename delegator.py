@@ -304,7 +304,7 @@ def chain(command, timeout=TIMEOUT, cwd=None, env=None):
         c = run(command, block=False, timeout=timeout, cwd=cwd, env=env)
 
         if data:
-            c.send(data,end="")
+            c.send(data, end="")
             c.subprocess.sendeof()
 
         data = c.out
