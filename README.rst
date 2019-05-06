@@ -23,7 +23,6 @@ by both `envoy <https://github.com/kennethreitz/envoy>`_ and `pexpect <http://pe
 
 This module features two main functions ``delegator.run()`` and ``delegator.chain()``. One runs commands, blocking or non-blocking, and the other runs a chain of commands, separated by the standard unix pipe operator: ``|``.
 
-If you're interested in financially supporting Kenneth Reitz open source, consider `visiting this link <https://cash.me/$KennethReitz>`_. Your support helps tremendously with sustainability of motivation, as Open Source is no longer part of my day job.
 
 Basic Usage
 -----------
