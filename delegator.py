@@ -261,6 +261,13 @@ class Command(object):
                 if self.subprocess.proc.stdout:
                     self.subprocess.proc.stdout.close()
 
+    def poll(self):
+        """Poll whether process has finished. Return value is the same as subprocess.Popen.returncode."""
+        if self.blocking:
+            raise RuntimeError("poll can only be used on non-blocking commands.")
+        else:
+            return self.subprocess.proc.poll()
+
     def pipe(self, command, timeout=None, cwd=None):
         """Runs the current command and passes its output to the next
         given process.
