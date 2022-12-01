@@ -243,7 +243,7 @@ class Command(object):
             # consume stdout and stderr
             if self.blocking:
                 try:
-                    stdout, stderr = self.subprocess.communicate()
+                    stdout, stderr = self.subprocess.communicate(timeout=self.timeout)
                     self.__out = stdout
                     self.__err = stderr
                 except ValueError:
